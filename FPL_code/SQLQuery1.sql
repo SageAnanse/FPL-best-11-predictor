@@ -73,11 +73,124 @@
  ORDER by Goals DESC;
 
  --Stage 2. Now sift using the goals scored for each team
+ --First find average number of goals across attackers, midfielders and defenders
+--select
+--avg(Goals+Penalty_Goals) as avg_goals 
+--into Sage.dbo.add_goals_attack
+--from Sage.dbo.attackers_start
+--;
+----12.92 approx 13 for attackers
+
+--select
+--avg(Goals+Penalty_Goals) as avg_goals 
+--into Sage.dbo.add_goals_mid
+--from Sage.dbo.midfielders_start
+--;
+----4.2 let's just wrap to 5
+
+--select
+--avg(Goals+Penalty_Goals) as avg_goals 
+--into Sage.dbo.add_goals_def
+--from Sage.dbo.defenders_start
+--;
+----1.2 wrapped to 2
+
+--For attackers
+select * 
+into sage.dbo.attackers_goals
+from sage.dbo.attackers_start 
+where goals+penalty_goals>=13;
+
+--For midfielders
+select * 
+into sage.dbo.midefielders_goals
+from sage.dbo.midfielders_start 
+where goals+penalty_goals>=5;
+
+--For defenders
+select * 
+into sage.dbo.defenders_goals
+from sage.dbo.defenders_start 
+where goals+penalty_goals>2;
+
+--Passes Completed and Assits (picking from players who are starting becasue some may have more assists than goals)
+--Also check average assists use as benchmark
+
+--select
+--avg(assists) as avg_assists,
+--avg(Perc_Passes_Completed) as av_passes
+--into Sage.dbo.add_assists_attack
+--from Sage.dbo.attackers_start
+--;
+----assists = 5.22 approx 5
+----av perc_passes = 74.29 approx 74.3
+
+--select
+--avg(assists) as avg_assists,
+--avg(Perc_Passes_Completed) as av_passes
+--into Sage.dbo.add_assists_midfield
+--from Sage.dbo.midfielders_start
+--;
+----assists = 3.12 approx 3
+----av perc_passes = 81.829 approx 81.83
+
+--select
+--avg(assists) as avg_assists,
+--avg(Perc_Passes_Completed) as av_passes
+--into Sage.dbo.add_assists_defence
+--from Sage.dbo.defenders_start
+--;
+----assists = 1.4 approx 1.5
+----av perc_passes = 81.29
+
+
+--Now assists from players start and not continue sifting.
+select * 
+into sage.dbo.attackers_assists
+from sage.dbo.attackers_start 
+where assists>=5
+or Perc_Passes_Completed >=74.3;
+
+select * 
+into sage.dbo.midfielders_assists
+from sage.dbo.midfielders_start 
+where assists>=3
+or Perc_Passes_Completed >=81.82;
+
+select * 
+into sage.dbo.defenders_assists
+from sage.dbo.defenders_start 
+where assists>=2
+or Perc_Passes_Completed >=81.29;
+
+--Find average of the xA and xG and finally union all and chhose best 11 from each position
 
 select
+avg(xA) as avg_xA,
+avg(xG) as av_xG
+into Sage.dbo.add_exp_attack
+from Sage.dbo.attackers_start
+;
+--xA= 5.22 approx 5
+--xG = 74.29 approx 74.3
 
+select
+avg(xA) as avg_xA,
+avg(xG) as av_xG
+into Sage.dbo.add_exp_mid
+from Sage.dbo.midfielders_start
+;
+--xA= 5.22 approx 5
+--xG = 74.29 approx 74.3
 
-
+select
+avg(xA) as avg_xA,
+avg(xG) as av_xG
+into Sage.dbo.add_exp_defen
+from Sage.dbo.defenders_start
+;
+--xA= 5.22 approx 5
+--xG = 74.29 approx 74.3
 
 
 
