@@ -1,4 +1,4 @@
-# FPL-best-11-predictor
+# FPL-best-11-select
 Trying to be better at SQL using this FPL dataset from kaggle for selecting the best 11.
 --This code was built using Microsoft  SQL Server Management Studio.The journey is going to be from having the results in excel and using a visualization tool to visualise results.
 The journey of every data analyst right?
